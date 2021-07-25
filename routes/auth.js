@@ -10,8 +10,14 @@ const TOKEN_KEY = process.env.TOKEN_KEY;
 async function authenticate(req, res) {
 	try {
 		const { username, password } = req.body;
-		console.log('req.body==>', req.body);
 		const encryptedPassword = await bcrypt.hash(password, 10);
+
+		const findUser = await User.find({ username }).exec();
+
+		if (findUser && !findUser.encryptedPassword == encryptedPassword) {
+			return res.status(403).send(`Incorrect password provided for username: ${username}`);
+		}
+
 		const token = jwt.sign({ username, encryptedPassword }, TOKEN_KEY, {
 			expiresIn: '2h',
 		});

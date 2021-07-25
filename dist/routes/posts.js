@@ -34,7 +34,8 @@ router.use(async function (req, res, next) {
 
 	try {
 		var decoded = jwt.verify(token, TOKEN_KEY);
-		req.user = decoded;
+
+		console.log('decoded =>', decoded);
 	} catch (err) {
 		return res.status(401).send('Invalid token: ' + token);
 	}

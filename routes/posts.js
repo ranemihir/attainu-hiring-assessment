@@ -1,6 +1,7 @@
 import Post from './../model/post';
 import express from 'express';
 import * as jwt from 'jsonwebtoken';
+import User from './../model/user';
 const router = express.Router();
 
 const POST_MAX_LENGTH = process.env.POST_MAX_LENGTH;
@@ -14,8 +15,9 @@ router.use(async function (req, res, next) {
 	}
 
 	try {
-		const decoded = jwt.verify(token, TOKEN_KEY);
-		req.user = decoded;
+		const { username } = jwt.verify(token, TOKEN_KEY);
+		const user = await User.find({ username }).exec();
+		req.user = user;
 	} catch (err) {
 		return res.status(401).send(`Invalid token: ${token}`);
 	}
@@ -24,6 +26,10 @@ router.use(async function (req, res, next) {
 });
 
 router.post('/0/create', async function (req, res) {
+	if (req.user.role != 'ADMIN') {
+		return res.status(403).send('User does not have the permissions to create');
+	}
+
 	const { data } = req.body;
 
 	if (!data) {
@@ -65,6 +71,10 @@ router.get('/:id', async function (req, res) {
 });
 
 router.post('/:id/update', async function (req, res) {
+	if (req.user.role != 'ADMIN') {
+		return res.status(403).send('User does not have the permissions to update');
+	}
+
 	const _id = req.params.id;
 	const { data } = req.body;
 
