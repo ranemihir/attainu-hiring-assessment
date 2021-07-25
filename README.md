@@ -63,16 +63,30 @@ const userSchema = new mongoose.Schema({
 
 I used `Postman` to test all the endpoints and here are the screenshots:
 
+### User
+
 ![Login as an 'Admin' User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_admin.png)
 
 ![Login as an 'Student' User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/student_login.png)
 
 ![Error message on Student User is not authorised to create/update/delete ](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/user_not_authorised.png)
 
-![Create an Admin User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_admin.png)
+![Incorrect Password Error](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/incorrect_password.png)
 
-![Create an Admin User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_admin.png)
+![Invalid token Error](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/invalid_token.png)
 
-![Create an Admin User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_admin.png)
+### Post
 
-![Create an Admin User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_admin.png)
+![Create a Post](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_post.png)
+
+![Retrieve a Post](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/get_post.png)
+
+![Invalid Post id Error](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/invalid_post_id.png)
+
+![Update a Post](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/update_post.png)
+
+![Delete a Post](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/post_delete.png)
+
+![Post exceeds length of 255 characters](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/post_exceeds_length_255.png)
+
+Note: All the Screenshots are stored in the scrrenshots directory inside root.
