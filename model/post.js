@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const POST_MAX_LENGTH = process.env.POST_MAX_LENGTH;
+const POST_MAX_LENGTH = parseInt(process.env.POST_MAX_LENGTH);
 
 const postSchema = new mongoose.Schema({
 	data: {

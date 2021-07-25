@@ -1,5 +1,6 @@
-import router from 'router';
 import Post from './../model/post';
+import express from 'express';
+const router = express.Router();
 
 const POST_MAX_LENGTH = process.env.POST_MAX_LENGTH;
 
@@ -22,9 +23,9 @@ router.post('/0/create', async function (req, res, next) {
 		});
 
 		return res.send(post);
-	} catch {
+	} catch (err) {
 		console.error(err);
-		next(error);
+		next(err);
 	}
 });
 
