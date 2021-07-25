@@ -17,7 +17,7 @@ Note: I have comitted the .env file (which is not a good practice) so that one c
   
 - `POST /login/student` -> Provide `username` and `password` to login as a student.
   
-- `POST` /posts/0/create` -> create a new post with `data` propery with not exceeding 255 characters.
+- `POST /posts/0/create` -> create a new post with `data` propery with not exceeding 255 characters.
   
 - `GET /posts/:id` -> get a post by proviidng its `id`.
   
