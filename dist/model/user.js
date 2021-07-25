@@ -12,16 +12,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var userSchema = new _mongoose2.default.Schema({
 	username: {
-		type: String
+		type: String,
+		required: true,
+		unique: true
 	},
 	encryptedPassword: {
-		type: String
+		type: String,
+		required: true
 	},
 	token: {
-		type: String
+		type: String,
+		required: true,
+		unique: true
 	},
 	role: {
 		type: String,
+		required: true,
 		enum: ['STUDENT', 'ADMIN'],
 		default: 'STUDENT'
 	}

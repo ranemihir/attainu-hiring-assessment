@@ -16,6 +16,10 @@ var _jsonwebtoken = require('jsonwebtoken');
 
 var jwt = _interopRequireWildcard(_jsonwebtoken);
 
+var _user = require('./../model/user');
+
+var _user2 = _interopRequireDefault(_user);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -33,9 +37,11 @@ router.use(async function (req, res, next) {
 	}
 
 	try {
-		var decoded = jwt.verify(token, TOKEN_KEY);
+		var _jwt$verify = jwt.verify(token, TOKEN_KEY),
+		    username = _jwt$verify.username;
 
-		console.log('decoded =>', decoded);
+		var user = await _user2.default.find({ username: username }).exec();
+		req.user = user;
 	} catch (err) {
 		return res.status(401).send('Invalid token: ' + token);
 	}
@@ -44,6 +50,10 @@ router.use(async function (req, res, next) {
 });
 
 router.post('/0/create', async function (req, res) {
+	if (req.user.role != 'ADMIN') {
+		return res.status(403).send('User does not have the permissions to create');
+	}
+
 	var data = req.body.data;
 
 
@@ -86,6 +96,10 @@ router.get('/:id', async function (req, res) {
 });
 
 router.post('/:id/update', async function (req, res) {
+	if (req.user.role != 'ADMIN') {
+		return res.status(403).send('User does not have the permissions to update');
+	}
+
 	var _id = req.params.id;
 	var data = req.body.data;
 

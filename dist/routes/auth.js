@@ -34,8 +34,14 @@ async function authenticate(req, res) {
 		    username = _req$body.username,
 		    password = _req$body.password;
 
-		console.log('req.body==>', req.body);
 		var encryptedPassword = await _bcryptjs2.default.hash(password, 10);
+
+		var findUser = await _user2.default.find({ username: username }).exec();
+
+		if (findUser && !findUser.encryptedPassword == encryptedPassword) {
+			return res.status(403).send('Incorrect password provided for username: ' + username);
+		}
+
 		var token = jwt.sign({ username: username, encryptedPassword: encryptedPassword }, TOKEN_KEY, {
 			expiresIn: '2h'
 		});
