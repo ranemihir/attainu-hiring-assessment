@@ -1,18 +1,33 @@
 import bcrypt from 'bcryptjs';
-import express from 'express';
+import * as jwt from 'jsonwebtoken';
 import router from 'router';
 import User from './../model/user';
+
+const TOKEN_KEY = process.env.TOKEN_KEY;
 
 async function authenticate(req, res, next) {
 	try {
 		const { username, password } = req.body;
-
 		const encryptedPassword = await bcrypt.hash(password, 10);
+		const token = jwt.sign({ username, encryptedPassword }, TOKEN_KEY, {
+			expiresIn: '2h',
+		});
 
-		const user = await User.create({
+		var role = 'STUDENT';
+
+		if (req.path.endsWith('/admin')) {
+			role = 'ADMIN';
+		}
+
+		await User.create({
 			username: username.toLowerCase(),
 			password: encryptedPassword,
-			token
+			token,
+			role
+		});
+
+		res.send({
+			token,
 		});
 	} catch (error) {
 		console.error(error);
