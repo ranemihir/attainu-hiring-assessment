@@ -58,3 +58,21 @@ const userSchema = new mongoose.Schema({
  }
 });
 ```
+
+## Screenshots
+
+I used `Postman` to test all the endpoints and here are the screenshots:
+
+![Login as an 'Admin' User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_admin.png)
+
+![Login as an 'Student' User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/student_login.png)
+
+![Error message on Student User is not authorised to create/update/delete ](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/user_not_authorised.png)
+
+![Create an Admin User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_admin.png)
+
+![Create an Admin User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_admin.png)
+
+![Create an Admin User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_admin.png)
+
+![Create an Admin User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_admin.png)

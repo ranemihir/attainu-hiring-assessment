@@ -157,26 +157,44 @@ router.get('/:id', /*#__PURE__*/function () {
         switch (_context3.prev = _context3.next) {
           case 0:
             id = req.params.id;
-            _context3.prev = 1;
-            _context3.next = 4;
+
+            if (!(!id || id == null || id == '')) {
+              _context3.next = 3;
+              break;
+            }
+
+            return _context3.abrupt("return", res.status(403).send('No id provided for the post'));
+
+          case 3:
+            _context3.prev = 3;
+            _context3.next = 6;
             return _post["default"].findById(id).exec();
 
-          case 4:
+          case 6:
             post = _context3.sent;
+
+            if (post) {
+              _context3.next = 9;
+              break;
+            }
+
+            return _context3.abrupt("return", res.status(403).send("Invalid post Id: ".concat(id)));
+
+          case 9:
             return _context3.abrupt("return", res.send(post));
 
-          case 8:
-            _context3.prev = 8;
-            _context3.t0 = _context3["catch"](1);
-            console.error(_context3.t0);
-            res.status(500).send('Internal Server Error');
-
           case 12:
+            _context3.prev = 12;
+            _context3.t0 = _context3["catch"](3);
+            console.error(_context3.t0);
+            return _context3.abrupt("return", res.status(403).send("Invalid Post id: ".concat(id, " provided")));
+
+          case 16:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, null, [[1, 8]]);
+    }, _callee3, null, [[3, 12]]);
   }));
 
   return function (_x6, _x7) {
@@ -191,16 +209,14 @@ router.post('/:id/update', /*#__PURE__*/function () {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
-            console.log('req.user==>', req.user);
-
             if (!(req.user.role != 'ADMIN')) {
-              _context4.next = 3;
+              _context4.next = 2;
               break;
             }
 
             return _context4.abrupt("return", res.status(403).send('User does not have the permissions to update'));
 
-          case 3:
+          case 2:
             _id = req.params.id;
             data = req.body.data;
 
@@ -208,8 +224,8 @@ router.post('/:id/update', /*#__PURE__*/function () {
               res.status(403).send("Post length exceeds the max length of ".concat(POST_MAX_LENGTH));
             }
 
-            _context4.prev = 6;
-            _context4.next = 9;
+            _context4.prev = 5;
+            _context4.next = 8;
             return _post["default"].findOneAndUpdate({
               _id: _id
             }, {
@@ -218,26 +234,70 @@ router.post('/:id/update', /*#__PURE__*/function () {
               "new": true
             });
 
-          case 9:
+          case 8:
             post = _context4.sent;
             return _context4.abrupt("return", res.send(post));
 
-          case 13:
-            _context4.prev = 13;
-            _context4.t0 = _context4["catch"](6);
+          case 12:
+            _context4.prev = 12;
+            _context4.t0 = _context4["catch"](5);
             console.error(_context4.t0);
             res.status(500).send('Internal Server Error');
 
-          case 17:
+          case 16:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, null, [[6, 13]]);
+    }, _callee4, null, [[5, 12]]);
   }));
 
   return function (_x8, _x9) {
     return _ref4.apply(this, arguments);
+  };
+}());
+router.post('/:id/delete', /*#__PURE__*/function () {
+  var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(req, res) {
+    var _id;
+
+    return _regenerator["default"].wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            if (!(req.user.role != 'ADMIN')) {
+              _context5.next = 2;
+              break;
+            }
+
+            return _context5.abrupt("return", res.status(403).send('User does not have the permissions to update'));
+
+          case 2:
+            _id = req.params.id;
+            _context5.prev = 3;
+            _context5.next = 6;
+            return _post["default"].deleteOne({
+              _id: _id
+            });
+
+          case 6:
+            return _context5.abrupt("return", res.send("Post with id: ".concat(_id, " deleted successfully")));
+
+          case 9:
+            _context5.prev = 9;
+            _context5.t0 = _context5["catch"](3);
+            console.error(_context5.t0);
+            res.status(500).send('Internal Server Error');
+
+          case 13:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5, null, [[3, 9]]);
+  }));
+
+  return function (_x10, _x11) {
+    return _ref5.apply(this, arguments);
   };
 }());
 var _default = router;

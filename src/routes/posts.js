@@ -61,12 +61,21 @@ router.post('/0/create', async function (req, res) {
 router.get('/:id', async function (req, res) {
 	const id = req.params.id;
 
+	if (!id || id == null || id == '') {
+		return res.status(403).send('No id provided for the post');
+	}
+
 	try {
 		const post = await Post.findById(id).exec();
+
+		if (!post) {
+			return res.status(403).send(`Invalid post Id: ${id}`);
+		}
+
 		return res.send(post);
 	} catch (err) {
 		console.error(err);
-		res.status(500).send('Internal Server Error');
+		return res.status(403).send(`Invalid Post id: ${id} provided`);
 	}
 });
 
@@ -92,6 +101,25 @@ router.post('/:id/update', async function (req, res) {
 		});
 
 		return res.send(post);
+	} catch (err) {
+		console.error(err);
+		res.status(500).send('Internal Server Error');
+	}
+});
+
+router.post('/:id/delete', async function (req, res) {
+	if (req.user.role != 'ADMIN') {
+		return res.status(403).send('User does not have the permissions to update');
+	}
+
+	const _id = req.params.id;
+
+	try {
+		await Post.deleteOne({
+			_id
+		});
+
+		return res.send(`Post with id: ${_id} deleted successfully`);
 	} catch (err) {
 		console.error(err);
 		res.status(500).send('Internal Server Error');
