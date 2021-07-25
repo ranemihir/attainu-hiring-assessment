@@ -65,28 +65,39 @@ I used `Postman` to test all the endpoints and here are the screenshots:
 
 ### User
 
+**Login as an 'Admin' User**
 ![Login as an 'Admin' User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_admin.png)
 
+**Login as an 'Student' User**
 ![Login as an 'Student' User](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/student_login.png)
 
-![Error message on Student User is not authorised to create/update/delete ](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/user_not_authorised.png)
+**Error message on Student User is not authorised to create/update/delete**
+![Error message on Student User is not authorised to create/update/delete](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/user_not_authorised.png)
 
+**Incorrect Password Error**
 ![Incorrect Password Error](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/incorrect_password.png)
 
+**Invalid token Error**
 ![Invalid token Error](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/invalid_token.png)
 
 ### Post
 
+**Create a Post**
 ![Create a Post](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/create_post.png)
 
+**Retrieve a Post**
 ![Retrieve a Post](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/get_post.png)
 
+**Invalid Post id Error**
 ![Invalid Post id Error](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/invalid_post_id.png)
 
+**Update a Post**
 ![Update a Post](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/update_post.png)
 
+**Delete a Post**
 ![Delete a Post](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/post_delete.png)
 
+**Post exceeds length of 255 characters**
 ![Post exceeds length of 255 characters](https://github.com/ranemihir/attainu-hiring-assessment/blob/main/screenshots/post_exceeds_length_255.png)
 
 Note: All the Screenshots are stored in the scrrenshots directory inside root.
