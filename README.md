@@ -26,7 +26,7 @@ Note: I have comitted the .env file (which is not a good practice) so that one c
 ## MongoDB Schema using Mongoose
 
 ```javascript
-Post Schema
+// Post Schema
 
 const postSchema = new mongoose.Schema({
  data: {
@@ -39,7 +39,7 @@ const postSchema = new mongoose.Schema({
 ```
 
 ```javascript
-# User Schema
+// User Schema
 
 const userSchema = new mongoose.Schema({
  username: {
