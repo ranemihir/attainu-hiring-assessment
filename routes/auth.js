@@ -7,9 +7,10 @@ const router = express.Router();
 
 const TOKEN_KEY = process.env.TOKEN_KEY;
 
-async function authenticate(req, res, next) {
+async function authenticate(req, res) {
 	try {
 		const { username, password } = req.body;
+		console.log('req.body==>', req.body);
 		const encryptedPassword = await bcrypt.hash(password, 10);
 		const token = jwt.sign({ username, encryptedPassword }, TOKEN_KEY, {
 			expiresIn: '2h',
@@ -39,7 +40,7 @@ async function authenticate(req, res, next) {
 		});
 	} catch (error) {
 		console.error(error);
-		next(error);
+		res.status(500).send('Internal Server Error');
 	}
 }
 

@@ -1,11 +1,34 @@
 import Post from './../model/post';
 import express from 'express';
+import * as jwt from 'jsonwebtoken';
 const router = express.Router();
 
 const POST_MAX_LENGTH = process.env.POST_MAX_LENGTH;
+const TOKEN_KEY = process.env.TOKEN_KEY;
 
-router.post('/0/create', async function (req, res, next) {
+router.use(async function (req, res, next) {
+	const token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+	if (!token) {
+		return res.status(403).send('Token is not present');
+	}
+
+	try {
+		const decoded = jwt.verify(token, TOKEN_KEY);
+		req.user = decoded;
+	} catch (err) {
+		return res.status(401).send(`Invalid token: ${token}`);
+	}
+
+	return next();
+});
+
+router.post('/0/create', async function (req, res) {
 	const { data } = req.body;
+
+	if (!data) {
+		return res.status(403).send('Post data property cannot be empty');
+	}
 
 	if (data.length > POST_MAX_LENGTH) {
 		return res.status(403).send(`Post length exceeds the max length of ${POST_MAX_LENGTH}`);
@@ -25,11 +48,11 @@ router.post('/0/create', async function (req, res, next) {
 		return res.send(post);
 	} catch (err) {
 		console.error(err);
-		next(err);
+		res.status(500).send('Internal Server Error');
 	}
 });
 
-router.get('/:id', async function (req, res, next) {
+router.get('/:id', async function (req, res) {
 	const id = req.params.id;
 
 	try {
@@ -37,11 +60,11 @@ router.get('/:id', async function (req, res, next) {
 		return res.send(post);
 	} catch (err) {
 		console.error(err);
-		next(err);
+		res.status(500).send('Internal Server Error');
 	}
 });
 
-router.post('/:id/update', async function (req, res, next) {
+router.post('/:id/update', async function (req, res) {
 	const _id = req.params.id;
 	const { data } = req.body;
 
@@ -61,7 +84,7 @@ router.post('/:id/update', async function (req, res, next) {
 		return res.send(post);
 	} catch (err) {
 		console.error(err);
-		next(err);
+		res.status(500).send('Internal Server Error');
 	}
 });
 
