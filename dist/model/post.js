@@ -1,26 +1,25 @@
-'use strict';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
+exports["default"] = void 0;
 
-var _mongoose = require('mongoose');
-
-var _mongoose2 = _interopRequireDefault(_mongoose);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _mongoose = _interopRequireDefault(require("mongoose"));
 
 var POST_MAX_LENGTH = parseInt(process.env.POST_MAX_LENGTH);
-
-var postSchema = new _mongoose2.default.Schema({
-	data: {
-		type: String,
-		trim: true,
-		default: null,
-		maxlength: POST_MAX_LENGTH
-	}
+var postSchema = new _mongoose["default"].Schema({
+  data: {
+    type: String,
+    trim: true,
+    "default": null,
+    maxlength: POST_MAX_LENGTH
+  }
 });
 
-var Post = _mongoose2.default.model('Post', postSchema);
+var Post = _mongoose["default"].model('Post', postSchema);
 
-exports.default = Post;
+var _default = Post;
+exports["default"] = _default;

@@ -16,7 +16,7 @@ router.use(async function (req, res, next) {
 
 	try {
 		const { username } = jwt.verify(token, TOKEN_KEY);
-		const user = await User.find({ username }).exec();
+		const user = await User.findOne({ username }).exec();
 		req.user = user;
 	} catch (err) {
 		return res.status(401).send(`Invalid token: ${token}`);

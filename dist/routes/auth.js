@@ -1,80 +1,141 @@
-'use strict';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
+exports["default"] = void 0;
 
-var _bcryptjs = require('bcryptjs');
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _bcryptjs2 = _interopRequireDefault(_bcryptjs);
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _jsonwebtoken = require('jsonwebtoken');
+var _bcryptjs = _interopRequireDefault(require("bcryptjs"));
 
-var jwt = _interopRequireWildcard(_jsonwebtoken);
+var jwt = _interopRequireWildcard(require("jsonwebtoken"));
 
-var _user = require('./../model/user');
+var _user = _interopRequireDefault(require("./../model/user"));
 
-var _user2 = _interopRequireDefault(_user);
+var _express = _interopRequireDefault(require("express"));
 
-var _express = require('express');
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-var _express2 = _interopRequireDefault(_express);
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var router = _express2.default.Router();
+var router = _express["default"].Router();
 
 var TOKEN_KEY = process.env.TOKEN_KEY;
 
-async function authenticate(req, res) {
-	try {
-		var _req$body = req.body,
-		    username = _req$body.username,
-		    password = _req$body.password;
+function authenticate(_x, _x2) {
+  return _authenticate.apply(this, arguments);
+}
 
-		var encryptedPassword = await _bcryptjs2.default.hash(password, 10);
+function _authenticate() {
+  _authenticate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(req, res) {
+    var _req$body, username, password, encryptedPassword, token, role, findUser, user;
 
-		var findUser = await _user2.default.find({ username: username }).exec();
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            _req$body = req.body, username = _req$body.username, password = _req$body.password;
+            _context.next = 4;
+            return _bcryptjs["default"].hash(password, 10);
 
-		if (findUser && !findUser.encryptedPassword == encryptedPassword) {
-			return res.status(403).send('Incorrect password provided for username: ' + username);
-		}
+          case 4:
+            encryptedPassword = _context.sent;
+            token = jwt.sign({
+              username: username,
+              encryptedPassword: encryptedPassword
+            }, TOKEN_KEY, {
+              expiresIn: '2h'
+            });
+            role = 'STUDENT';
 
-		var token = jwt.sign({ username: username, encryptedPassword: encryptedPassword }, TOKEN_KEY, {
-			expiresIn: '2h'
-		});
+            if (req.path.endsWith('/admin')) {
+              role = 'ADMIN';
+            }
 
-		var role = 'STUDENT';
+            _context.next = 10;
+            return _user["default"].findOne({
+              username: username
+            }).exec();
 
-		if (req.path.endsWith('/admin')) {
-			role = 'ADMIN';
-		}
+          case 10:
+            findUser = _context.sent;
 
-		var user = await _user2.default.create({
-			username: username.toLowerCase(),
-			password: encryptedPassword,
-			token: token,
-			role: role
-		});
+            if (!findUser) {
+              _context.next = 18;
+              break;
+            }
 
-		await user.save(function (err) {
-			if (err) {
-				console.error(err);
-			}
-		});
+            if (!(findUser.encryptedPassword != encryptedPassword)) {
+              _context.next = 14;
+              break;
+            }
 
-		res.send({
-			token: token
-		});
-	} catch (error) {
-		console.error(error);
-		res.status(500).send('Internal Server Error');
-	}
+            return _context.abrupt("return", res.status(403).send("Incorrect password provided for username: ".concat(username)));
+
+          case 14:
+            _context.next = 16;
+            return _user["default"].findOneAndUpdate({
+              username: username.toLowerCase()
+            }, {
+              token: token
+            }, {
+              "new": true
+            });
+
+          case 16:
+            _context.next = 23;
+            break;
+
+          case 18:
+            _context.next = 20;
+            return _user["default"].create({
+              username: username.toLowerCase(),
+              encryptedPassword: encryptedPassword,
+              token: token,
+              role: role
+            });
+
+          case 20:
+            user = _context.sent;
+            _context.next = 23;
+            return user.save(function (err) {
+              if (err) {
+                console.error(err);
+              }
+            });
+
+          case 23:
+            res.send({
+              token: token
+            });
+            _context.next = 30;
+            break;
+
+          case 26:
+            _context.prev = 26;
+            _context.t0 = _context["catch"](0);
+            console.error(_context.t0);
+            res.status(500).send('Internal Server Error');
+
+          case 30:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[0, 26]]);
+  }));
+  return _authenticate.apply(this, arguments);
 }
 
 router.post('/admin', authenticate);
 router.post('/student', authenticate);
-
-exports.default = router;
+var _default = router;
+exports["default"] = _default;

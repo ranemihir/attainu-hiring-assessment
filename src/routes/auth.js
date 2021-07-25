@@ -12,12 +12,6 @@ async function authenticate(req, res) {
 		const { username, password } = req.body;
 		const encryptedPassword = await bcrypt.hash(password, 10);
 
-		const findUser = await User.find({ username }).exec();
-
-		if (findUser && !findUser.encryptedPassword == encryptedPassword) {
-			return res.status(403).send(`Incorrect password provided for username: ${username}`);
-		}
-
 		const token = jwt.sign({ username, encryptedPassword }, TOKEN_KEY, {
 			expiresIn: '2h',
 		});
@@ -28,18 +22,34 @@ async function authenticate(req, res) {
 			role = 'ADMIN';
 		}
 
-		const user = await User.create({
-			username: username.toLowerCase(),
-			password: encryptedPassword,
-			token,
-			role
-		});
+		const findUser = await User.findOne({ username }).exec();
 
-		await user.save(function (err) {
-			if (err) {
-				console.error(err);
+		if (findUser) {
+			if (findUser.encryptedPassword != encryptedPassword) {
+				return res.status(403).send(`Incorrect password provided for username: ${username}`);
 			}
-		});
+
+			await User.findOneAndUpdate({
+				username: username.toLowerCase(),
+			}, {
+				token
+			}, {
+				new: true
+			});
+		} else {
+			const user = await User.create({
+				username: username.toLowerCase(),
+				encryptedPassword,
+				token,
+				role
+			});
+
+			await user.save(function (err) {
+				if (err) {
+					console.error(err);
+				}
+			});
+		}
 
 		res.send({
 			token,

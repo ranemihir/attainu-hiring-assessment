@@ -1,38 +1,38 @@
-'use strict';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
+});
+exports["default"] = void 0;
+
+var _mongoose = _interopRequireDefault(require("mongoose"));
+
+var userSchema = new _mongoose["default"].Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  encryptedPassword: {
+    type: String,
+    required: true
+  },
+  token: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  role: {
+    type: String,
+    required: true,
+    "enum": ['STUDENT', 'ADMIN'],
+    "default": 'STUDENT'
+  }
 });
 
-var _mongoose = require('mongoose');
+var User = _mongoose["default"].model('User', userSchema);
 
-var _mongoose2 = _interopRequireDefault(_mongoose);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var userSchema = new _mongoose2.default.Schema({
-	username: {
-		type: String,
-		required: true,
-		unique: true
-	},
-	encryptedPassword: {
-		type: String,
-		required: true
-	},
-	token: {
-		type: String,
-		required: true,
-		unique: true
-	},
-	role: {
-		type: String,
-		required: true,
-		enum: ['STUDENT', 'ADMIN'],
-		default: 'STUDENT'
-	}
-});
-
-var User = _mongoose2.default.model('User', userSchema);
-
-exports.default = User;
+var _default = User;
+exports["default"] = _default;

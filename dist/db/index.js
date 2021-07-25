@@ -1,23 +1,20 @@
-'use strict';
+"use strict";
 
-var _mongoose = require('mongoose');
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _mongoose2 = _interopRequireDefault(_mongoose);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _mongoose = _interopRequireDefault(require("mongoose"));
 
 var MONGODB_URI = process.env.MONGODB_URI;
 
-_mongoose2.default.connect(MONGODB_URI, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	useCreateIndex: true
+_mongoose["default"].connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false
 });
 
-var db = _mongoose2.default.connection;
-
+var db = _mongoose["default"].connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-
 db.once('open', function () {
-	console.log('Connection successful with mongodb');
+  console.log('Connection successful with mongodb');
 });

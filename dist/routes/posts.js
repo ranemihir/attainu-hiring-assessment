@@ -1,127 +1,244 @@
-'use strict';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
+exports["default"] = void 0;
 
-var _post = require('./../model/post');
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _post2 = _interopRequireDefault(_post);
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _express = require('express');
+var _post = _interopRequireDefault(require("./../model/post"));
 
-var _express2 = _interopRequireDefault(_express);
+var _express = _interopRequireDefault(require("express"));
 
-var _jsonwebtoken = require('jsonwebtoken');
+var jwt = _interopRequireWildcard(require("jsonwebtoken"));
 
-var jwt = _interopRequireWildcard(_jsonwebtoken);
+var _user = _interopRequireDefault(require("./../model/user"));
 
-var _user = require('./../model/user');
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-var _user2 = _interopRequireDefault(_user);
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var router = _express2.default.Router();
+var router = _express["default"].Router();
 
 var POST_MAX_LENGTH = process.env.POST_MAX_LENGTH;
 var TOKEN_KEY = process.env.TOKEN_KEY;
+router.use( /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(req, res, next) {
+    var token, _jwt$verify, username, user;
 
-router.use(async function (req, res, next) {
-	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-	if (!token) {
-		return res.status(403).send('Token is not present');
-	}
+            if (token) {
+              _context.next = 3;
+              break;
+            }
 
-	try {
-		var _jwt$verify = jwt.verify(token, TOKEN_KEY),
-		    username = _jwt$verify.username;
+            return _context.abrupt("return", res.status(403).send('Token is not present'));
 
-		var user = await _user2.default.find({ username: username }).exec();
-		req.user = user;
-	} catch (err) {
-		return res.status(401).send('Invalid token: ' + token);
-	}
+          case 3:
+            _context.prev = 3;
+            _jwt$verify = jwt.verify(token, TOKEN_KEY), username = _jwt$verify.username;
+            _context.next = 7;
+            return _user["default"].findOne({
+              username: username
+            }).exec();
 
-	return next();
-});
+          case 7:
+            user = _context.sent;
+            req.user = user;
+            _context.next = 14;
+            break;
 
-router.post('/0/create', async function (req, res) {
-	if (req.user.role != 'ADMIN') {
-		return res.status(403).send('User does not have the permissions to create');
-	}
+          case 11:
+            _context.prev = 11;
+            _context.t0 = _context["catch"](3);
+            return _context.abrupt("return", res.status(401).send("Invalid token: ".concat(token)));
 
-	var data = req.body.data;
+          case 14:
+            return _context.abrupt("return", next());
 
+          case 15:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[3, 11]]);
+  }));
 
-	if (!data) {
-		return res.status(403).send('Post data property cannot be empty');
-	}
+  return function (_x, _x2, _x3) {
+    return _ref.apply(this, arguments);
+  };
+}());
+router.post('/0/create', /*#__PURE__*/function () {
+  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(req, res) {
+    var data, post;
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            if (!(req.user.role != 'ADMIN')) {
+              _context2.next = 2;
+              break;
+            }
 
-	if (data.length > POST_MAX_LENGTH) {
-		return res.status(403).send('Post length exceeds the max length of ' + POST_MAX_LENGTH);
-	}
+            return _context2.abrupt("return", res.status(403).send('User does not have the permissions to create'));
 
-	try {
-		var post = await _post2.default.create({
-			data: data
-		});
+          case 2:
+            data = req.body.data;
 
-		await post.save(function (err) {
-			if (err) {
-				console.error(err);
-			}
-		});
+            if (data) {
+              _context2.next = 5;
+              break;
+            }
 
-		return res.send(post);
-	} catch (err) {
-		console.error(err);
-		res.status(500).send('Internal Server Error');
-	}
-});
+            return _context2.abrupt("return", res.status(403).send('Post data property cannot be empty'));
 
-router.get('/:id', async function (req, res) {
-	var id = req.params.id;
+          case 5:
+            if (!(data.length > POST_MAX_LENGTH)) {
+              _context2.next = 7;
+              break;
+            }
 
-	try {
-		var post = await _post2.default.findById(id).exec();
-		return res.send(post);
-	} catch (err) {
-		console.error(err);
-		res.status(500).send('Internal Server Error');
-	}
-});
+            return _context2.abrupt("return", res.status(403).send("Post length exceeds the max length of ".concat(POST_MAX_LENGTH)));
 
-router.post('/:id/update', async function (req, res) {
-	if (req.user.role != 'ADMIN') {
-		return res.status(403).send('User does not have the permissions to update');
-	}
+          case 7:
+            _context2.prev = 7;
+            _context2.next = 10;
+            return _post["default"].create({
+              data: data
+            });
 
-	var _id = req.params.id;
-	var data = req.body.data;
+          case 10:
+            post = _context2.sent;
+            _context2.next = 13;
+            return post.save(function (err) {
+              if (err) {
+                console.error(err);
+              }
+            });
 
+          case 13:
+            return _context2.abrupt("return", res.send(post));
 
-	if (data.length > POST_MAX_LENGTH) {
-		res.status(403).send('Post length exceeds the max length of ' + POST_MAX_LENGTH);
-	}
+          case 16:
+            _context2.prev = 16;
+            _context2.t0 = _context2["catch"](7);
+            console.error(_context2.t0);
+            res.status(500).send('Internal Server Error');
 
-	try {
-		var post = await _post2.default.findOneAndUpdate({
-			_id: _id
-		}, {
-			data: data
-		}, {
-			new: true
-		});
+          case 20:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[7, 16]]);
+  }));
 
-		return res.send(post);
-	} catch (err) {
-		console.error(err);
-		res.status(500).send('Internal Server Error');
-	}
-});
+  return function (_x4, _x5) {
+    return _ref2.apply(this, arguments);
+  };
+}());
+router.get('/:id', /*#__PURE__*/function () {
+  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(req, res) {
+    var id, post;
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            id = req.params.id;
+            _context3.prev = 1;
+            _context3.next = 4;
+            return _post["default"].findById(id).exec();
 
-exports.default = router;
+          case 4:
+            post = _context3.sent;
+            return _context3.abrupt("return", res.send(post));
+
+          case 8:
+            _context3.prev = 8;
+            _context3.t0 = _context3["catch"](1);
+            console.error(_context3.t0);
+            res.status(500).send('Internal Server Error');
+
+          case 12:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, null, [[1, 8]]);
+  }));
+
+  return function (_x6, _x7) {
+    return _ref3.apply(this, arguments);
+  };
+}());
+router.post('/:id/update', /*#__PURE__*/function () {
+  var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(req, res) {
+    var _id, data, post;
+
+    return _regenerator["default"].wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            console.log('req.user==>', req.user);
+
+            if (!(req.user.role != 'ADMIN')) {
+              _context4.next = 3;
+              break;
+            }
+
+            return _context4.abrupt("return", res.status(403).send('User does not have the permissions to update'));
+
+          case 3:
+            _id = req.params.id;
+            data = req.body.data;
+
+            if (data.length > POST_MAX_LENGTH) {
+              res.status(403).send("Post length exceeds the max length of ".concat(POST_MAX_LENGTH));
+            }
+
+            _context4.prev = 6;
+            _context4.next = 9;
+            return _post["default"].findOneAndUpdate({
+              _id: _id
+            }, {
+              data: data
+            }, {
+              "new": true
+            });
+
+          case 9:
+            post = _context4.sent;
+            return _context4.abrupt("return", res.send(post));
+
+          case 13:
+            _context4.prev = 13;
+            _context4.t0 = _context4["catch"](6);
+            console.error(_context4.t0);
+            res.status(500).send('Internal Server Error');
+
+          case 17:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, null, [[6, 13]]);
+  }));
+
+  return function (_x8, _x9) {
+    return _ref4.apply(this, arguments);
+  };
+}());
+var _default = router;
+exports["default"] = _default;

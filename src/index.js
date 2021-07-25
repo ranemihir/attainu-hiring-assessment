@@ -17,5 +17,5 @@ app.use(cors());
 app.use('/login', auth);
 app.use('/posts', posts);
 
-app.listen(PORT, () => `Server running at http://localhost:${PORT}`);
+app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
 
