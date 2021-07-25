@@ -19,11 +19,17 @@ async function authenticate(req, res, next) {
 			role = 'ADMIN';
 		}
 
-		await User.create({
+		const user = await User.create({
 			username: username.toLowerCase(),
 			password: encryptedPassword,
 			token,
 			role
+		});
+
+		await user.save(function (err) {
+			if (err) {
+				console.error(err);
+			}
 		});
 
 		res.send({
