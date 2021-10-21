@@ -1,4 +1,4 @@
-# AttainU Instructor Hiring Assessment
+# node-mongo-auth
 
 - Used Babel to compile ES6 javascript
 - Used Mongoose to connect to mongo db.
